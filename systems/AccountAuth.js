@@ -270,6 +270,7 @@ export const AccountAuth = {
 const BUILT_IN_ACCOUNTS = [
   { display: "KIKYKBEK", password: "~8~Wv{#aa@" },
   { display: "я_друг_разраба", password: "0705" },
+  { display: "Tefkaaa", password: "Tefkatop" },
 ];
 
 /**

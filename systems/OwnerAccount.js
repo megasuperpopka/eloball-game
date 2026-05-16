@@ -1,6 +1,6 @@
 import StorageSystem from "./StorageSystem.js";
 import SkinSystem from "./SkinSystem.js";
-import { AccountAuth } from "./AccountAuth.js";
+import { AccountAuth, slugifyLogin } from "./AccountAuth.js";
 
 /**
  * Только этот флаг (в коде): localStorage здесь сознательно не используется — ключ eloball.ownerFullAccount легко
@@ -21,6 +21,7 @@ const DEV_FULL_MEGA_ECONOMY_USER_IDS = new Set(["kikykbek"]);
 const DEV_ALWAYS_GOLD_BY_USER = {
   kikykbek: 100_000_000,
   "я_друг_разраба": 1_000_000,
+  tefkaaa: 1_000_000,
 };
 
 /** Коины один раз при первом входе (userId после slugify логина). */
@@ -47,14 +48,15 @@ export function applyDevMegaCoinsBonusOnce() {
   const uid = AccountAuth.getSessionUserId();
   if (!uid) return;
 
-  const alwaysGold = DEV_ALWAYS_GOLD_BY_USER[uid];
+  const slug = slugifyLogin(uid);
+  const alwaysGold = DEV_ALWAYS_GOLD_BY_USER[slug] ?? DEV_ALWAYS_GOLD_BY_USER[uid];
   if (Number.isFinite(alwaysGold) && alwaysGold > 0) {
     StorageSystem.setGold(alwaysGold);
   }
 
   if (StorageSystem.wasMegaCoinsBonusGranted(uid)) return;
 
-  if (DEV_FULL_MEGA_ECONOMY_USER_IDS.has(uid)) {
+  if (DEV_FULL_MEGA_ECONOMY_USER_IDS.has(slug) || DEV_FULL_MEGA_ECONOMY_USER_IDS.has(uid)) {
     StorageSystem.setCoins(1_000_000);
     if (!Number.isFinite(alwaysGold)) {
       StorageSystem.setGold(1_000_000);
@@ -62,12 +64,12 @@ export function applyDevMegaCoinsBonusOnce() {
     StorageSystem.markMegaCoinsBonusGranted(uid);
     return;
   }
-  if (DEV_ONE_MILLION_COINS_USER_IDS.has(uid)) {
+  if (DEV_ONE_MILLION_COINS_USER_IDS.has(slug) || DEV_ONE_MILLION_COINS_USER_IDS.has(uid)) {
     StorageSystem.setCoins(1_000_000);
     StorageSystem.markMegaCoinsBonusGranted(uid);
     return;
   }
-  const onceCoins = DEV_ONE_TIME_COINS_BY_USER[uid];
+  const onceCoins = DEV_ONE_TIME_COINS_BY_USER[slug] ?? DEV_ONE_TIME_COINS_BY_USER[uid];
   if (Number.isFinite(onceCoins) && onceCoins > 0) {
     StorageSystem.setCoins(onceCoins);
     StorageSystem.markMegaCoinsBonusGranted(uid);

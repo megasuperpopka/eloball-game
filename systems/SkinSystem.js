@@ -1,5 +1,6 @@
 import StorageSystem from "./StorageSystem.js";
 import { resolveGameAssetUrl } from "./AssetUrl.js";
+import { buildMemeSkinEntries } from "./MemeSkinsData.js";
 
 const SKINS = [
   { id: "default", name: "Стартовый", rarity: "Default", type: "color", value: "#ffffff", caseGroup: "basic", sound: null },
@@ -51,6 +52,8 @@ const SKINS = [
   { id: "cust_vozdyhan", name: "ВОЗДУХАН", rarity: "Mythic", type: "image", value: "assets/images/skins/vozdyhan.png", caseGroup: "premium", sound: null },
   { id: "cust_cheremsha", name: "ЧЕРЕМША", rarity: "Legendary", type: "image", value: "assets/images/skins/cheremsha.png", caseGroup: "premium", sound: null },
   { id: "cust_vozmi_telefon", name: "ВОЗЬМИ ТЕЛЕФОН,ДЕТКА", rarity: "Legendary", type: "image", value: "assets/images/skins/vozmi_telefon.png", caseGroup: "premium", sound: null },
+
+  ...buildMemeSkinEntries(),
 ];
 
 /** @type {Map<string, HTMLImageElement>} */
