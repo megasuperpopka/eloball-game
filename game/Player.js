@@ -20,6 +20,8 @@ export class Player {
     this.skinImage = null;
     this.vx = 0;
     this.vy = 0;
+    this.prevX = x;
+    this.prevY = y;
   }
 
   update(target, deltaTime) {
@@ -29,8 +31,8 @@ export class Player {
       return;
     }
 
-    const previousX = this.x;
-    const previousY = this.y;
+    this.prevX = this.x;
+    this.prevY = this.y;
 
     this.x = target.x;
     this.y = target.y;
@@ -38,8 +40,8 @@ export class Player {
     this.x = Math.max(FIELD.x + this.radius, Math.min(FIELD.x + FIELD.width - this.radius, this.x));
     this.y = Math.max(FIELD.y + this.radius, Math.min(FIELD.y + FIELD.height - this.radius, this.y));
 
-    const rawVx = (this.x - previousX) / deltaTime;
-    const rawVy = (this.y - previousY) / deltaTime;
+    const rawVx = (this.x - this.prevX) / deltaTime;
+    const rawVy = (this.y - this.prevY) / deltaTime;
     const rawSpeed = Math.hypot(rawVx, rawVy);
     const maxPhysicsSpeed = 900;
 
@@ -60,8 +62,8 @@ export class Player {
       return;
     }
 
-    const previousX = this.x;
-    const previousY = this.y;
+    this.prevX = this.x;
+    this.prevY = this.y;
     const speed = Number.isFinite(maxSpeed) ? maxSpeed : this.maxSpeed;
 
     const dx = targetX - this.x;
@@ -78,8 +80,8 @@ export class Player {
     this.x = Math.max(FIELD.x + this.radius, Math.min(FIELD.x + FIELD.width - this.radius, this.x));
     this.y = Math.max(FIELD.y + this.radius, Math.min(FIELD.y + FIELD.height - this.radius, this.y));
 
-    this.vx = (this.x - previousX) / deltaTime;
-    this.vy = (this.y - previousY) / deltaTime;
+    this.vx = (this.x - this.prevX) / deltaTime;
+    this.vy = (this.y - this.prevY) / deltaTime;
   }
 
   draw(ctx) {

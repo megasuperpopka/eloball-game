@@ -11,18 +11,20 @@ export const FIELD = {
   goalBoxHeight: 170,
 };
 
+const GOAL_HEIGHT = 260;
+
 export const GOALS = {
   left: {
     x: FIELD.x,
-    y: FIELD.y + FIELD.height / 2 - 65,
+    y: FIELD.y + FIELD.height / 2 - GOAL_HEIGHT / 2,
     width: 18,
-    height: 130,
+    height: GOAL_HEIGHT,
   },
   right: {
     x: FIELD.x + FIELD.width - 18,
-    y: FIELD.y + FIELD.height / 2 - 65,
+    y: FIELD.y + FIELD.height / 2 - GOAL_HEIGHT / 2,
     width: 18,
-    height: 130,
+    height: GOAL_HEIGHT,
   },
 };
 

@@ -352,10 +352,11 @@ export class MatchCore {
 
     this.player.update(effectivePointer, dt);
     this.ai.update(dt);
+    resolveCollision(this.player, this.ball);
+    resolveCollision(this.bot, this.ball);
     this.ball.update(dt);
     resolveCollision(this.player, this.ball);
     resolveCollision(this.bot, this.ball);
-    // Важно: после столкновений ещё раз проверяем стены, чтобы мяч не "продавило" в край.
     this.ball.applyWallBounce();
 
     const goalSide = this.checkGoal();

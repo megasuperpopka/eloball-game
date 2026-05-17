@@ -81,12 +81,13 @@ const menuToast = { text: "", timer: 0 };
 function runPostLoginEconomy() {
   hydrateProfileEconomyOnce();
   applyOwnerAccountIfEnabled();
-  applyDevMegaCoinsBonusOnce();
   const daily = DailyLoginBonusSystem.tryGrant();
   if (daily.granted) {
     menuToast.text = `Ежедневный бонус: +${daily.gold} gold, +${daily.coins} коин`;
     menuToast.timer = 4.5;
   }
+  // После ежедневного бонуса: для dev-акков выставляем фиксированную голду (не «+100», а ровно 1M).
+  applyDevMegaCoinsBonusOnce();
 }
 
 function hasUnclaimedQuestOrAchievementRewards() {

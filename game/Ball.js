@@ -84,22 +84,38 @@ export class Ball {
     const maxY = FIELD.y + FIELD.height - this.radius;
     const goalTop = GOALS.left.y;
     const goalBottom = GOALS.left.y + GOALS.left.height;
-    // В ворота мяч проходит только если полностью помещается в окно ворот.
     const inGoalWindow = this.y - this.radius >= goalTop && this.y + this.radius <= goalBottom;
 
-    if (this.x < minX && !inGoalWindow) {
-      this.x = minX;
-      this.vx = Math.abs(this.vx);
-    } else if (this.x > maxX && !inGoalWindow) {
-      this.x = maxX;
-      this.vx = -Math.abs(this.vx);
+    const restitution = 1.32;
+    const minBounce = 300;
+
+    if (!inGoalWindow) {
+      if (this.x < minX) {
+        this.x = minX + 0.25;
+        this.vx = Math.max(minBounce, Math.abs(this.vx) * restitution);
+      } else if (this.x > maxX) {
+        this.x = maxX - 0.25;
+        this.vx = -Math.max(minBounce, Math.abs(this.vx) * restitution);
+      }
     }
+
     if (this.y < minY) {
-      this.y = minY;
-      this.vy = Math.abs(this.vy);
+      this.y = minY + 0.25;
+      this.vy = Math.max(minBounce, Math.abs(this.vy) * restitution);
     } else if (this.y > maxY) {
-      this.y = maxY;
-      this.vy = -Math.abs(this.vy);
+      this.y = maxY - 0.25;
+      this.vy = -Math.max(minBounce, Math.abs(this.vy) * restitution);
+    }
+
+    if (this.x <= minX + 1 || this.x >= maxX - 1) {
+      if (Math.abs(this.vy) < minBounce * 0.55) {
+        this.vy = (this.vy >= 0 ? 1 : -1) * minBounce * 0.55;
+      }
+    }
+    if (this.y <= minY + 1 || this.y >= maxY - 1) {
+      if (Math.abs(this.vx) < minBounce * 0.55) {
+        this.vx = (this.vx >= 0 ? 1 : -1) * minBounce * 0.55;
+      }
     }
   }
 }
