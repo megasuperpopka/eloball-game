@@ -6,6 +6,12 @@ export const GARAGE_PRICE = 1500;
 export const GARAGE_IMAGE_PATH = "assets/images/skins/garaz.png";
 export const GARAGE_DROP_COUNT = 5;
 
+/** Top / Legendary / Mythic в гараже выпадают в 2 раза реже Rare / Epic. */
+const GARAGE_HIGH_RARITY_WEIGHT = 0.5;
+const GARAGE_NORMAL_RARITY_WEIGHT = 1;
+
+const GARAGE_DOWNWEIGHTED_RARITIES = new Set(["Mythic", "Legendary", "Top"]);
+
 /** @type {HTMLImageElement | null} */
 let garageImage = null;
 
@@ -15,10 +21,29 @@ function getGarageSkinPool() {
   );
 }
 
+function skinGarageWeight(skin) {
+  return GARAGE_DOWNWEIGHTED_RARITIES.has(skin.rarity)
+    ? GARAGE_HIGH_RARITY_WEIGHT
+    : GARAGE_NORMAL_RARITY_WEIGHT;
+}
+
+function pickWeightedGarageSkin(pool) {
+  let total = 0;
+  for (let i = 0; i < pool.length; i += 1) {
+    total += skinGarageWeight(pool[i]);
+  }
+  let roll = Math.random() * total;
+  for (let i = 0; i < pool.length; i += 1) {
+    roll -= skinGarageWeight(pool[i]);
+    if (roll <= 0) return pool[i];
+  }
+  return pool[pool.length - 1];
+}
+
 function pickRandomSkins(pool, count) {
   const drops = [];
   for (let i = 0; i < count; i += 1) {
-    drops.push(pool[Math.floor(Math.random() * pool.length)]);
+    drops.push(pickWeightedGarageSkin(pool));
   }
   return drops;
 }
